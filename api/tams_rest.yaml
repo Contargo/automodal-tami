@@ -3,16 +3,14 @@ info:
   description: "Thing Action Management System"
   version: "1.0.0"
   title: "TAMS"
-  contact:
-    email: "sauter@synyx.de"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
-- name: "details"
-  description: "details about shit"
-- name: "job"
-  description: "getting things done"
+  - name: "details"
+    description: "details about shit"
+  - name: "job"
+    description: "getting things done"
 
 paths:
   /state:
@@ -20,37 +18,36 @@ paths:
       tags:
         - "internal"
       summary: "job status interface"
-      description: "Jedes Thing (Kran) teilt bei Eintreten eines Events seinen Status mit. Events können Änderungen des Job-Status  aber auch andere Job relevante Ereignisse sein."
+      description: "Every 'thing' propagates its status to the other systems.
+        Events can be changes to a Job-Status or just related to the Job in general."
       operationId: "jobStatus"
       requestBody:
-        description: Pet object that needs to be added to the store
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/State'
+              $ref: "#/components/schemas/State"
         required: true
       responses:
         "405":
           description: "Invalid input"
-        '200':
+        "200":
           description: successful operation
           content:
             application/xml:
               schema:
-                $ref: '#/components/schemas/State'
+                $ref: "#/components/schemas/State"
             application/json:
               schema:
-                $ref: '#/components/schemas/State'
+                $ref: "#/components/schemas/State"
 
   /metric:
     post:
       tags:
         - "internal"
       summary: "metric schnittstelle"
-      description: "Die Sensoren teilen periodisch alle ihnen bekannten Metriken (Messwerte, Zustände, usw) 
-        dem TAMS mit. Diese werden archiviert, ausgewertet und anderen Systemen zur Verfügung gestellt. 
-        Siehe dazu „3.5 Metriken“ für mögliche Metriken.
-        Periode: 1-x Sekunden"
+      description: "Sensors periodically propagate their measurements to TAMS.
+        TAMS then aggregates and analyses those and provides the Data again
+        to other systems. The general period is around 1+ seconds"
       operationId: "metric"
       requestBody:
         content:
@@ -59,7 +56,7 @@ paths:
               type: object
               properties:
                 metadata:
-                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                  $ref: "refs/types.yaml#/components/schemas/Event"
                 created:
                   type: string
                   example: "2017-04-28T08:24:31.614+02:00"
@@ -68,7 +65,7 @@ paths:
                 metrics:
                   type: array
                   items:
-                    $ref: 'refs/types.yaml#/components/schemas/Metric'
+                    $ref: "refs/types.yaml#/components/schemas/Metric"
       responses:
         "405":
           description: "Invalid input"
@@ -78,8 +75,8 @@ paths:
       tags:
         - "internal"
       summary: "alarm schnittstelle"
-      description: "Die Sensoren melden außergewöhnliche Dinge dem TAMS. Quittierte Alarme werden aus 
-        der Alarm-Liste entfernt."
+      description: "Sensors report 'important' or 'unusal' events to TAMS.
+        Acknowledged alarms are removed from the list."
       operationId: "alarm"
       requestBody:
         content:
@@ -88,17 +85,18 @@ paths:
               type: object
               properties:
                 metadata:
-                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                  $ref: "refs/types.yaml#/components/schemas/Event"
                 created:
                   type: string
                   example: "2017-04-28T08:24:31.614+02:00"
-                  description: "Timestamp of the event, ISO 8601 coded, UTC timezone 
+                  description:
+                    "Timestamp of the event, ISO 8601 coded, UTC timezone
                     (pattern yyyy-MM-ddTHH:mm:ss.SSSZ)"
                   format: "date-time"
                 alarms:
                   type: array
                   items:
-                    $ref: 'refs/types.yaml#/components/schemas/Alarm'
+                    $ref: "refs/types.yaml#/components/schemas/Alarm"
       responses:
         "405":
           description: "Invalid input"
@@ -108,9 +106,10 @@ paths:
       tags:
         - "external"
       summary: "alarm schnittstelle"
-      description: "Das TAMS aggregiert die Alarme die es von den internen 
-        Sensoren bekommt. Die Präsenz in der aktuellen Liste modelliert dabei den Status des Alarms. 
-        In der Liste heißt, dass der Alarm incoming ist und alle nicht in der Liste sind outgoing."
+      description: "TAMS aggregates the alarms it gets from the sensors. The
+        whole list models the current state of reality. Meaning alarms in the
+        list are still occuring/unfixed, while the ones that are not in there
+        (anymore) are viewed as 'fixed'"
       operationId: "alarmList"
       requestBody:
         content:
@@ -119,28 +118,28 @@ paths:
               type: object
               properties:
                 metadata:
-                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                  $ref: "refs/types.yaml#/components/schemas/Event"
                 alarm:
                   type: array
                   items:
-                    $ref: 'refs/types.yaml#/components/schemas/Alarm'
+                    $ref: "refs/types.yaml#/components/schemas/Alarm"
       responses:
         "405":
           description: "Invalid input"
       parameters:
-        - $ref: 'refs/parameters.yaml#/components/parameters/location'
-        - $ref: 'refs/parameters.yaml#/components/parameters/type'
-        - $ref: 'refs/parameters.yaml#/components/parameters/name'
+        - $ref: "refs/parameters.yaml#/components/parameters/location"
+        - $ref: "refs/parameters.yaml#/components/parameters/type"
+        - $ref: "refs/parameters.yaml#/components/parameters/name"
 
   /{location}/{type}/{name}/metric:
     post:
       tags:
         - "external"
       summary: "metric schnittstelle"
-      description: "Das TAMS sammelt alle Daten die es bekommt und gibt diese aggregiert 
-        über einen Zeitraum wieder. Heißt es sammelt über X Sekunden Daten und gibt dann Informationen 
-        zu den „Letzten X Sekunden“ wieder. Das Ziel ist zu jedem Zeitpunkt ein möglichst genaues Abbild
-         des Gesamtsystems zu erhalten."
+      description: "TAMS collects and aggregates all data and can therefore
+        answer when asked for a specific timeframe. Typically this is useful
+        when you want a short overview about the current situation, think
+        like 'What happened in the last X seconds?'"
       operationId: "metricList"
       requestBody:
         content:
@@ -149,25 +148,24 @@ paths:
               type: object
               properties:
                 metadata:
-                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                  $ref: "refs/types.yaml#/components/schemas/Event"
                 metrics:
                   type: array
                   items:
-                    $ref: 'refs/types.yaml#/components/schemas/Metric'
+                    $ref: "refs/types.yaml#/components/schemas/Metric"
       responses:
         "405":
           description: "Invalid input"
       parameters:
-        - $ref: 'refs/parameters.yaml#/components/parameters/location'
-        - $ref: 'refs/parameters.yaml#/components/parameters/type'
-        - $ref: 'refs/parameters.yaml#/components/parameters/name'
+        - $ref: "refs/parameters.yaml#/components/parameters/location"
+        - $ref: "refs/parameters.yaml#/components/parameters/type"
+        - $ref: "refs/parameters.yaml#/components/parameters/name"
 
 components:
   schemas:
     Unit:
       type: object
       title: a Unit
-      description: A pet for sale in the pet store
       properties:
         height:
           type: integer
@@ -203,7 +201,6 @@ components:
     State:
       type: object
       title: a State
-      description: A pet for sale in the pet store
       properties:
         created:
           type: string
@@ -211,14 +208,13 @@ components:
           description: "ASDF Timestamp of the event, ISO 8601 coded, UTC timezone (pattern yyyy-MM-ddTHH:mm:ss.SSSZ)"
           format: "date-time"
         unit:
-          $ref: '#/components/schemas/Unit'
+          $ref: "#/components/schemas/Unit"
         metadata:
-          $ref: 'refs/types.yaml#/components/schemas/Event'
+          $ref: "refs/types.yaml#/components/schemas/Event"
         jobType:
-          $ref: 'refs/enums.yaml#/components/schemas/JobType'
+          $ref: "refs/enums.yaml#/components/schemas/JobType"
         jobStatus:
-          $ref: 'refs/enums.yaml#/components/schemas/JobStatus'
-        
-          
+          $ref: "refs/enums.yaml#/components/schemas/JobStatus"
+
       xml:
         name: "State"

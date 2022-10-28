@@ -1,15 +1,14 @@
 openapi: 3.0.3
 components:
   schemas:
-
     Event:
       type: object
       description: "these are the metadata of the rest payload. It's neccessary to get an AMQP/REST compatibility."
       properties:
         eventId:
-          $ref: '#/components/schemas/GUID'
+          $ref: "#/components/schemas/GUID"
         timestamp:
-          $ref: '#/components/schemas/DateTime'
+          $ref: "#/components/schemas/DateTime"
         version:
           type: string
           example: "v1"
@@ -23,19 +22,18 @@ components:
           example: "tos-dekob.contargo.net"
           description: "System which has produced the message e.g.  tos-dekob.contargo.net"
         site:
-          $ref: 'enums.yaml#/components/schemas/SiteType'
+          $ref: "enums.yaml#/components/schemas/SiteType"
         location:
           type: string
           example: "DEKOB"
           description: "Location which has produced the message e.g.  DEGIG"
 
-
     Unit:
       type: object
-      description: "these are the"
+      description: "The units that get transfered, one example would be a container."
       properties:
         unitId:
-          $ref: '#/components/schemas/GUID'
+          $ref: "#/components/schemas/GUID"
         height:
           type: integer
           example: 123
@@ -55,7 +53,7 @@ components:
         type:
           type: string
           example: 123
-          description: "Container Size/Typecode "
+          description: "Container Size/Typecode"
         number:
           type: string
           example: 123
@@ -65,17 +63,16 @@ components:
           example: true
           description: "Indicates if the container is a piggyback"
 
-
     Feature:
       type: object
-      description: "Ein Feature ist eine Komponente des Krans die zusätzlich zur Grundfunktionalität des Things 
-                    zur Verfügung stehen. Beispiele wären ein Finallanding System oder Systeme zur Erkennung von 
-                    Container Beschriftung, aber auch der Spreader, Waage, usw."
+      description: "A feature of the crane that is available additionally to
+        the basics. An example would be something like a
+        'final-landing'-system or a scale for container"
       properties:
         featureId:
-          $ref: '#/components/schemas/GUID'
+          $ref: "#/components/schemas/GUID"
         type:
-          $ref: 'enums.yaml#/components/schemas/FeatureType'
+          $ref: "enums.yaml#/components/schemas/FeatureType"
         vendor:
           type: string
           description: "Vendor of the feature"
@@ -85,11 +82,10 @@ components:
 
     Thing:
       type: object
-      description: "Beschreibt das Thing allgemein als Information für das TAMS als auch für andere Terminal Teilnehmer. 
-                    Wird nur vom Endpunkt Details genutzt."
+      description: "Describes the 'thing' in its entirety for TAMS and other services."
       properties:
         thingId:
-          $ref: '#/components/schemas/GUID'
+          $ref: "#/components/schemas/GUID"
         name:
           type: string
           example: "asdf"
@@ -106,13 +102,13 @@ components:
           type: object
           properties:
             GeoLocation:
-              $ref: '#/components/schemas/GeoLocation'
+              $ref: "#/components/schemas/GeoLocation"
           description: "actual X/Y/Z coordinates of thing"
         referencePoint:
           type: object
           properties:
             GeoLocation:
-              $ref: '#/components/schemas/GeoLocation'
+              $ref: "#/components/schemas/GeoLocation"
           description: "Reference point for X/Y/Z coordinates"
         terminal:
           type: string
@@ -129,7 +125,6 @@ components:
         movementRange:
           type: string
           example: ""
-          description: "TBD"
 
     Flipper:
       type: object
@@ -148,7 +143,7 @@ components:
           example: 0
 
     Coordinates:
-      description: "lala huhu"
+      description: "Basic x/y/z coordinates"
       type: object
       properties:
         x:
@@ -212,7 +207,6 @@ components:
           example: 46.23519
           description: "Longitude in decimal degrees"
 
-
     ThingStatus:
       type: object
       properties:
@@ -274,47 +268,43 @@ components:
           description: "Category of the maintenance work. Maybe indicates duration and impact e.g. partial system downtime, total system downtime etc."
         validFrom:
           type: string
-          example: "TBD"
           description: "Start of maintenance work"
         validTo:
           type: string
-          example: "TBD"
           description: "Approximated end of maintenance work"
         downTimeStart:
           type: string
-          example: "TBD"
           description: "Estimated Downtime start"
         downTimeEnd:
           type: string
-          example: "TBD"
           description: "Estimated Downtime end"
         operationalDuringDowntime:
-          $ref: 'enums.yaml#/components/schemas/operationalDuringDowntimeType'
+          $ref: "enums.yaml#/components/schemas/operationalDuringDowntimeType"
 
     Alarm:
       type: object
       properties:
         alarmId:
-          $ref: '#/components/schemas/GUID'
+          $ref: "#/components/schemas/GUID"
         alarmType:
-          $ref: 'enums.yaml#/components/schemas/AlarmType'
+          $ref: "enums.yaml#/components/schemas/AlarmType"
         timestamp:
-          $ref: '#/components/schemas/DateTime'
+          $ref: "#/components/schemas/DateTime"
 
     ContainerType:
       type: string
       example: "20GP"
-      pattern: '^[0-9]{2}[A-Z]{2}$'
+      pattern: "^[0-9]{2}[A-Z]{2}$"
 
     ContainerSize:
       type: string
       example: "20G0"
-      pattern: '^[0-9]{2}[A-Z][0-9]$'
+      pattern: "^[0-9]{2}[A-Z][0-9]$"
 
     ContainerNumber:
       type: string
       example: "CSQU3054383"
-      pattern: '^[A-Z]{4}[0-9]{7}$'
+      pattern: "^[A-Z]{4}[0-9]{7}$"
 
     DateTime:
       type: string

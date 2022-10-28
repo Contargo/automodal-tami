@@ -14,7 +14,7 @@ components:
 
     CommandType:
       type: string
-      example: "landed"
+      example: "resume"
       enum:
         - cancel
         - pause
@@ -52,7 +52,7 @@ components:
 
     JobStatus:
       type: string
-      example: "done"
+      example: "ready"
       enum:
         - inProgress
         - weighted
@@ -70,7 +70,6 @@ components:
         - "yes"
         - "no"
         - "partial"
-
 
     AlarmType:
       type: string

@@ -3,16 +3,14 @@ info:
   description: "Crane Control System"
   version: "1.0.0"
   title: "CCS"
-  contact:
-    email: "sauter@synyx.de"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
-- name: "details"
-  description: "details about the thing"
-- name: "job"
-  description: "getting things done"
+  - name: "details"
+    description: "details about the thing"
+  - name: "job"
+    description: "getting things done"
 paths:
   /details:
     get:
@@ -30,11 +28,11 @@ paths:
                 type: object
                 properties:
                   metadata:
-                    $ref: 'refs/types.yaml#/components/schemas/Event'
+                    $ref: "refs/types.yaml#/components/schemas/Event"
                   features:
                     type: array
                     items:
-                      $ref: 'refs/types.yaml#/components/schemas/Feature'
+                      $ref: "refs/types.yaml#/components/schemas/Feature"
         "503":
           description: "Service Unavailable"
   /job:
@@ -53,11 +51,11 @@ paths:
                 unit:
                   $ref: "refs/types.yaml#/components/schemas/Unit"
                 metadata:
-                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                  $ref: "refs/types.yaml#/components/schemas/Event"
                 type:
-                  $ref: 'refs/enums.yaml#/components/schemas/JobType'
+                  $ref: "refs/enums.yaml#/components/schemas/JobType"
                 target:
-                  $ref: 'refs/types.yaml#/components/schemas/Coordinates'
+                  $ref: "refs/types.yaml#/components/schemas/Coordinates"
       responses:
         "405":
           description: "Invalid input"
@@ -66,11 +64,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'refs/schemas.yaml#/components/schemas/JobState'
+                $ref: "refs/schemas.yaml#/components/schemas/JobState"
 
   /command:
     post:
-      tags: 
+      tags:
         - "command"
       summary: "commands like cancel"
       description: "Send additional commands to the crane."
@@ -82,9 +80,9 @@ paths:
               type: object
               properties:
                 metadata:
-                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                  $ref: "refs/types.yaml#/components/schemas/Event"
                 command:
-                  $ref: 'refs/enums.yaml#/components/schemas/CommandType'
+                  $ref: "refs/enums.yaml#/components/schemas/CommandType"
       responses:
         "405":
           description: "Invalid input"
