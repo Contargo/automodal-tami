@@ -1,0 +1,19 @@
+openapi: 3.0.3
+components:
+  schemas:
+    JobState:
+      type: object
+      properties:
+        metadata:
+          $ref: 'types.yaml#/components/schemas/Event'
+        created:
+          type: string
+          example: "2017-04-28T08:24:31.614+02:00"
+          description: "Timestamp of the event, ISO 8601 coded, UTC timezone (pattern yyyy-MM-ddTHH:mm:ss.SSSZ)"
+          format: "date-time"
+        jobType:
+          $ref: 'enums.yaml#/components/schemas/JobType'
+        jobStatus:
+          $ref: 'enums.yaml#/components/schemas/JobStatus'
+        unit:
+          $ref: "types.yaml#/components/schemas/Unit"

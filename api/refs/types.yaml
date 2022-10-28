@@ -1,0 +1,328 @@
+openapi: 3.0.3
+components:
+  schemas:
+
+    Event:
+      type: object
+      description: "these are the metadata of the rest payload. It's neccessary to get an AMQP/REST compatibility."
+      properties:
+        eventId:
+          $ref: '#/components/schemas/GUID'
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
+        version:
+          type: string
+          example: "v1"
+          description: "Version of message specification"
+        type:
+          type: string
+          example: "net.contargo.logistics.mot.handling.waiting"
+          description: "e.g. net.contargo.logistics.mot.handling.finished"
+        producer:
+          type: string
+          example: "tos-dekob.contargo.net"
+          description: "System which has produced the message e.g.  tos-dekob.contargo.net"
+        site:
+          $ref: 'enums.yaml#/components/schemas/SiteType'
+        location:
+          type: string
+          example: "DEKOB"
+          description: "Location which has produced the message e.g.  DEGIG"
+
+
+    Unit:
+      type: object
+      description: "these are the"
+      properties:
+        unitId:
+          $ref: '#/components/schemas/GUID'
+        height:
+          type: integer
+          example: 123
+          description: "Height of the unit in mm"
+        width:
+          type: integer
+          example: 123
+          description: "Width of the unit in mm"
+        length:
+          type: integer
+          example: 123
+          description: "Lenght of the unit in mm"
+        weight:
+          type: integer
+          example: 123
+          description: "weight in Kg"
+        type:
+          type: string
+          example: 123
+          description: "Container Size/Typecode "
+        number:
+          type: string
+          example: 123
+          description: "Container Number"
+        piggyBack:
+          type: boolean
+          example: true
+          description: "Indicates if the container is a piggyback"
+
+
+    Feature:
+      type: object
+      description: "Ein Feature ist eine Komponente des Krans die zusätzlich zur Grundfunktionalität des Things 
+                    zur Verfügung stehen. Beispiele wären ein Finallanding System oder Systeme zur Erkennung von 
+                    Container Beschriftung, aber auch der Spreader, Waage, usw."
+      properties:
+        featureId:
+          $ref: '#/components/schemas/GUID'
+        type:
+          $ref: 'enums.yaml#/components/schemas/FeatureType'
+        vendor:
+          type: string
+          description: "Vendor of the feature"
+        version:
+          type: string
+          description: "Version of the feature"
+
+    Thing:
+      type: object
+      description: "Beschreibt das Thing allgemein als Information für das TAMS als auch für andere Terminal Teilnehmer. 
+                    Wird nur vom Endpunkt Details genutzt."
+      properties:
+        thingId:
+          $ref: '#/components/schemas/GUID'
+        name:
+          type: string
+          example: "asdf"
+          description: "Name of the thing"
+        type:
+          type: string
+          example: "RMG"
+          description: "Type of the thing (RMG, AGV...)"
+        calibrated:
+          type: boolean
+          example: true
+          description: "Is the balance calibrated? "
+        geoLocation:
+          type: object
+          properties:
+            GeoLocation:
+              $ref: '#/components/schemas/GeoLocation'
+          description: "actual X/Y/Z coordinates of thing"
+        referencePoint:
+          type: object
+          properties:
+            GeoLocation:
+              $ref: '#/components/schemas/GeoLocation'
+          description: "Reference point for X/Y/Z coordinates"
+        terminal:
+          type: string
+          example: ""
+          description: ""
+        maxKg:
+          type: integer
+          example: "10000"
+          description: "Maximum weight in kg"
+        maxHeight:
+          type: integer
+          example: "400"
+          description: "Maximum height in mm"
+        movementRange:
+          type: string
+          example: ""
+          description: "TBD"
+
+    Flipper:
+      type: object
+      properties:
+        a:
+          type: integer
+          example: 1
+        b:
+          type: integer
+          example: 0
+        c:
+          type: integer
+          example: 1
+        d:
+          type: integer
+          example: 0
+
+    Coordinates:
+      description: "lala huhu"
+      type: object
+      properties:
+        x:
+          type: integer
+          example: "1a"
+          description: "In mm"
+        y:
+          type: integer
+          example: "3b"
+          description: "In mm"
+        z:
+          type: integer
+          example: "1e"
+          description: "In mm"
+
+    LogicalCoordinates:
+      type: object
+      properties:
+        bay:
+          type: integer
+          example: 2
+          description: "Number of the bay"
+        row:
+          type: integer
+          example: 42
+          description: "Number of the row"
+        tier:
+          type: integer
+          example: 2
+          description: "Number of the tier"
+        bayType:
+          type: string
+          example: "Waterside"
+          description: "Waterside, Landside..."
+
+    CranePosition:
+      type: object
+      properties:
+        gantry:
+          type: integer
+          example: 100
+          description: "In mm"
+        trolley:
+          type: integer
+          example: 777
+          description: "In mm"
+        hoist:
+          type: integer
+          example: 1337
+          description: "In mm"
+
+    GeoLocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+          example: 008.01544
+          description: "Latitude in decimal degrees"
+        longitude:
+          type: number
+          example: 46.23519
+          description: "Longitude in decimal degrees"
+
+
+    ThingStatus:
+      type: object
+      properties:
+        powerOn:
+          type: boolean
+          example: true
+          description: "Indicates if the thing is on or off"
+        operational:
+          type: boolean
+          example: true
+          description: "Thing is ready to work"
+        reducedPerformance:
+          type: boolean
+          example: true
+          description: "Crane can only be operated with reduced power (for example failure of a feed unit)"
+        warning:
+          type: boolean
+          example: true
+          description: "Indicates if a warning is present"
+        error:
+          type: boolean
+          example: true
+          description: "Indicates if a error is present"
+        fireAlarm:
+          type: boolean
+          example: true
+          description: "Indicates if a fire alarm is present"
+        windWarning:
+          type: boolean
+          example: true
+          description: "Indicates wind warning"
+        windAlarm:
+          type: boolean
+          example: true
+          description: "Indicates wind alarm"
+
+    Metric:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "poweron hour"
+          description: "Indicates if the thing is on or off"
+        datatype:
+          type: string
+          example: "integer"
+          description: "Datatype of the value field"
+        value:
+          type: string
+          example: "poweron hour"
+          description: "Value of the metric, depends on datatype"
+
+    Maintenance:
+      type: object
+      properties:
+        maintenanceType:
+          type: string
+          example: "234"
+          description: "Category of the maintenance work. Maybe indicates duration and impact e.g. partial system downtime, total system downtime etc."
+        validFrom:
+          type: string
+          example: "TBD"
+          description: "Start of maintenance work"
+        validTo:
+          type: string
+          example: "TBD"
+          description: "Approximated end of maintenance work"
+        downTimeStart:
+          type: string
+          example: "TBD"
+          description: "Estimated Downtime start"
+        downTimeEnd:
+          type: string
+          example: "TBD"
+          description: "Estimated Downtime end"
+        operationalDuringDowntime:
+          $ref: 'enums.yaml#/components/schemas/operationalDuringDowntimeType'
+
+    Alarm:
+      type: object
+      properties:
+        alarmId:
+          $ref: '#/components/schemas/GUID'
+        alarmType:
+          $ref: 'enums.yaml#/components/schemas/AlarmType'
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
+
+    ContainerType:
+      type: string
+      example: "20GP"
+      pattern: '^[0-9]{2}[A-Z]{2}$'
+
+    ContainerSize:
+      type: string
+      example: "20G0"
+      pattern: '^[0-9]{2}[A-Z][0-9]$'
+
+    ContainerNumber:
+      type: string
+      example: "CSQU3054383"
+      pattern: '^[A-Z]{4}[0-9]{7}$'
+
+    DateTime:
+      type: string
+      example: "2017-04-28T08:24:31.614+02:00"
+      description: "ISO 8601 (UTC): yyyy-MM-ddTHH:mm:ss.SSSZZ"
+      format: "date-time"
+
+    GUID:
+      type: string
+      example: "7ca4c4e9-1db4-49bf-a893-b03f483906da"
+      description: "GUID"

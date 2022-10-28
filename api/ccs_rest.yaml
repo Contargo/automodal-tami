@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  description: "Crane Control System"
+  version: "1.0.0"
+  title: "CCS"
+  contact:
+    email: "sauter@synyx.de"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+- name: "details"
+  description: "details about the thing"
+- name: "job"
+  description: "getting things done"
+paths:
+  /details:
+    get:
+      tags:
+        - "details"
+      summary: "details of the thing"
+      description: "details of the thing like manufacturer and features"
+      operationId: "details"
+      responses:
+        200:
+          description: "returns details of thing"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    $ref: 'refs/types.yaml#/components/schemas/Event'
+                  features:
+                    type: array
+                    items:
+                      $ref: 'refs/types.yaml#/components/schemas/Feature'
+        "503":
+          description: "Service Unavailable"
+  /job:
+    post:
+      tags:
+        - "job"
+      summary: "job interface"
+      description: "Send a new jobs to the thing. If a job is running the thing will return an 409."
+      operationId: "job"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                unit:
+                  $ref: "refs/types.yaml#/components/schemas/Unit"
+                metadata:
+                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                type:
+                  $ref: 'refs/enums.yaml#/components/schemas/JobType'
+                target:
+                  $ref: 'refs/types.yaml#/components/schemas/Coordinates'
+      responses:
+        "405":
+          description: "Invalid input"
+        "409":
+          description: "conflict - a job is running"
+          content:
+            application/json:
+              schema:
+                $ref: 'refs/schemas.yaml#/components/schemas/JobState'
+
+  /command:
+    post:
+      tags: 
+        - "command"
+      summary: "commands like cancel"
+      description: "Send additional commands to the crane."
+      operationId: "command"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                metadata:
+                  $ref: 'refs/types.yaml#/components/schemas/Event'
+                command:
+                  $ref: 'refs/enums.yaml#/components/schemas/CommandType'
+      responses:
+        "405":
+          description: "Invalid input"
+        "409":
+          description: "Ignored"

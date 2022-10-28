@@ -1,0 +1,87 @@
+openapi: 3.0.3
+components:
+  schemas:
+    JobType:
+      type: string
+      example: "move"
+      enum:
+        - move
+        - pick
+        - drop
+        - park
+        - remote
+        - stormPin
+
+    CommandType:
+      type: string
+      example: "landed"
+      enum:
+        - cancel
+        - pause
+        - resume
+
+    SpreaderStatus:
+      type: string
+      example: "landed"
+      enum:
+        - landed
+        - notLanded
+        - error
+
+    TwistlockStatus:
+      type: string
+      example: "closed"
+      enum:
+        - open
+        - closed
+        - error
+
+    FeatureType:
+      type: string
+      example: "CIS"
+      enum:
+        - finalLanding
+        - CIS
+
+    ThingType:
+      type: string
+      example: "crane"
+      enum:
+        - crane
+        - atv
+
+    JobStatus:
+      type: string
+      example: "done"
+      enum:
+        - inProgress
+        - weighted
+        - continued
+        - stopped
+        - rejected
+        - paused
+        - ready
+
+    operationalDuringDowntimeType:
+      type: string
+      example: "yes"
+      description: "yes/no/partial operational"
+      enum:
+        - "yes"
+        - "no"
+        - "partial"
+
+
+    AlarmType:
+      type: string
+      example: "tbd"
+      enum:
+        - tbd
+
+    SiteType:
+      type: string
+      example: "terminal"
+      enum:
+        - terminal
+        - seaport
+        - crane
